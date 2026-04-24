@@ -1,0 +1,43 @@
+gastos = []
+while True:
+    print('=' * 40)
+    print('          Relatório de gastos        ')
+    print('=' * 40)
+    print('[1] Adicionar gastos')                     #TABELA VISUAL PARA O USUARIO EM LOOP
+    print('[2] Listar os gastos')
+    print('[3] Mostrar total gasto')
+    print('[4] Sair')
+    servico = input('Escolha o serviço que voce quer: ')
+
+    if servico == '1':
+        print('escreva o nome do produto (NOME DO PRODUTO)')
+        print('escreva o preço do produto (PREÇO)') #CRIAR UMA LISTA E AUTOMATIZAR ESSA PARTE NO FINAL DO ESQUELETO DO PREJETO
+        produto = str(input('Digite o nome do produto:   '))
+        valor_do_produto = float(input('Digite o preço do seu produto:   '))
+
+        if valor_do_produto < 0:    #Validando se o valor e positivo ou negativo
+            print('valor inválido')
+        else:
+            gastos.append((produto, valor_do_produto))
+            print('Gastos adicionados')
+
+    elif servico == "2":
+        print('=' * 30)
+        print('LISTA DE GASTOS')
+        print('=' * 30)
+
+        if not gastos:
+            print('Nenhum gasto cadastrado.') #adiciona uma saida casa nao tenha nenhum valor na lista
+        else:
+            for produto, valor in gastos:
+             print(f'{produto} - R$ {valor:.2f}') #DEIXA AS LINHAS UMA EMBAIXO DA OUTRA E ADICIONA $
+
+    elif servico == '3':
+        total = 0
+        for produto in gastos:
+            total += produto[1]
+        print(f'Total gasto: R$ {total:.2f}')
+     
+    elif servico == '4':
+        print('Encerrando o sistema.')
+        break
