@@ -1,4 +1,5 @@
 gastos = []
+categorias_disponiveis = ['Alimentação', 'Transporte', 'Saúde', 'Lazer', 'Educação', 'Outros']
 while True:
     print('=' * 40)
     print('          Relatório de gastos        ')
@@ -6,19 +7,31 @@ while True:
     print('[1] Adicionar gastos')                     #TABELA VISUAL PARA O USUARIO EM LOOP
     print('[2] Listar os gastos')
     print('[3] Mostrar total gasto')
-    print('[4] Sair')
+    print('[4] Listar por categoria')
+    print('[5] Sair')
     servico = input('Escolha o serviço que voce quer: ')
 
     if servico == '1':
-        print('escreva o nome do produto (NOME DO PRODUTO)')
-        print('escreva o preço do produto (PREÇO)') #CRIAR UMA LISTA E AUTOMATIZAR ESSA PARTE NO FINAL DO ESQUELETO DO PREJETO
         produto = str(input('Digite o nome do produto:   '))
         valor_do_produto = float(input('Digite o preço do seu produto:   '))
 
         if valor_do_produto < 0:    #Validando se o valor e positivo ou negativo
             print('valor inválido')
         else:
-            gastos.append((produto, valor_do_produto))
+            print('\ncategorias_disponiveis:')
+            for i, cat in enumerate(categorias_disponiveis, 1): #cat == categoria
+                print(f' [{i}] {cat}')
+            
+            escolha_a_categoria = input(f'Escolha a categoria (numero): ')
+
+            if escolha_a_categoria.isdigit() and 1 <= int(escolha_a_categoria) <= len(categorias_disponiveis): #evitando erro de abc
+                categoria = categorias_disponiveis[int(escolha_a_categoria) - 1]
+
+            else:  
+                categoria = 'Outros'
+                print('Categoria invalida, defina como outros. ')
+
+            gastos.append((produto, valor_do_produto,categoria))
             print('Gastos adicionados')
 
     elif servico == "2":
@@ -27,10 +40,11 @@ while True:
         print('=' * 30)
 
         if not gastos:
-            print('Nenhum gasto cadastrado.') #adiciona uma saida casa nao tenha nenhum valor na lista
+            print('Nenhum gasto cadastrado.') #adiciona uma saida caso nao tenha nenhum valor na lista
         else:
-            for produto, valor in gastos:
-             print(f'{produto} - R$ {valor:.2f}') #DEIXA AS LINHAS UMA EMBAIXO DA OUTRA E ADICIONA $
+            for produto, valor, categoria in gastos:
+             print(f'{produto} [{categoria}] - R$ {valor:.2f}') #DEIXA AS LINHAS UMA EMBAIXO DA OUTRA E ADICIONA $
+            print(f'Total de gastos cadastrados {len(gastos)}')
 
     elif servico == '3':
         total = 0
@@ -39,5 +53,23 @@ while True:
         print(f'Total gasto: R$ {total:.2f}')
      
     elif servico == '4':
-        print('Encerrando o sistema.')
+        for categoria in categorias_disponiveis:
+            gastos_da_categoria = []             #criando a lista nova gastos_da_categoria
+            for produto, valor, cat in gastos:
+                if cat == categoria:
+                    gastos_da_categoria.append((produto, valor))
+        
+        # fora do for acima so executa depois de ver todos os gastos
+            if gastos_da_categoria:
+                total_categoria = sum(valor for _, valor in gastos_da_categoria)
+                print(f'\n{categoria} — Total: R$ {total_categoria:.2f}')
+                print('-' * 35)
+                for nome, valor in gastos_da_categoria:
+                    print(f'  {nome:<22} R$ {valor:.2f}')
+
+    elif servico == '5':
+        print('encerrando o sistema')
         break
+    
+    else:
+        print('Serviço näo encontrado, digite um numero compativel com os nossos serviços: ')

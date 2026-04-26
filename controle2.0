@@ -1,0 +1,74 @@
+gastos = []
+categorias_disponiveis = ['Alimentação', 'Transporte', 'Saúde', 'Lazer', 'Educação', 'Outros']
+
+while True:
+    print('=' * 40)
+    print('          Relatório de gastos        ')
+    print('=' * 40)
+    print('[1] Adicionar gastos')
+    print('[2] Listar os gastos')
+    print('[3] Mostrar total gasto')
+    print('[4] Listar por categoria')   #NOVA CATEGORIA
+    print('[5] Sair')
+    servico = input('Escolha o serviço que voce quer: ')
+
+    if servico == '1':
+        produto = str(input('Digite o nome do produto:   '))
+        valor_do_produto = float(input('Digite o preço do seu produto:   '))
+
+        if valor_do_produto < 0:
+            print('valor inválido')
+        else:
+            # Escolha de categoria que voce quer
+            print('\nCategorias disponíveis:')
+            for i, cat in enumerate(categorias_disponiveis, 1): #cat == categoria
+                print(f'  [{i}] {cat}')
+            
+            escolha_cat = input('Escolha a categoria (número): ')
+            
+            if escolha_cat.isdigit() and 1 <= int(escolha_cat) <= len(categorias_disponiveis): #evitando erro de abc
+                categoria = categorias_disponiveis[int(escolha_cat) - 1]
+            else:
+                categoria = 'Outros'
+                print('Categoria inválida, definida como "Outros".') 
+            
+            gastos.append((produto, valor_do_produto, categoria))  # tupla agora tem 3 elementos
+            print(f'Gasto adicionado na categoria "{categoria}"!')
+
+    elif servico == "2":
+        print('=' * 30)
+        print('LISTA DE GASTOS')
+        print('=' * 30)
+
+        if not gastos:
+            print('Nenhum gasto cadastrado.')
+        else:
+            for produto, valor, categoria in gastos:  # desempacota 3 valores agora
+                print(f'{produto} [{categoria}] - R$ {valor:.2f}')
+            print(f'Total de gastos cadastrados: {len(gastos)}')
+
+    elif servico == '3':
+        total = 0
+        for gasto in gastos:
+            total += gasto[1]
+        print(f'Total gasto: R$ {total:.2f}')
+
+    elif servico == '4':   # NOVA OPÇÃO
+        print('=' * 30)
+        print('GASTOS POR CATEGORIA')
+        print('=' * 30)
+
+        if not gastos:
+            print('Nenhum gasto cadastrado.')
+        else:
+            for cat in categorias_disponiveis:
+                gastos_da_cat = [(p, v) for p, v, c in gastos if c == cat]
+                if gastos_da_cat:
+                    total_cat = sum(v for _, v in gastos_da_cat)  #sum para diminuir o uso de linhas e automatizar a soma
+                    print(f'\n {cat} (Total: R$ {total_cat:.2f})') 
+                    for p, v in gastos_da_cat:
+                        print(f'   - {p}: R$ {v:.2f}')
+
+    elif servico == '5':
+        print('Encerrando o sistema.')
+        break
