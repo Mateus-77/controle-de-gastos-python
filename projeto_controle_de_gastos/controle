@@ -12,16 +12,25 @@ while True:
     servico = input('Escolha o serviço que voce quer: ')
 
     if servico == '1':
-        produto = str(input('Digite o nome do produto:   '))
-        valor_do_produto = float(input('Digite o preço do seu produto:   '))
+        produto = (input('Digite o nome do produto:   ')).strip() #remover espaços vazios, nao permitindo o usuario salvar sem nome
+        while not produto:     #pequena repetiçao para nao permitir espaços vazios
+            print('Nome näo pode ser em branco')
+            produto = input('Digite o nome do produto: ').strip()
 
-        if valor_do_produto < 0:    #Validando se o valor e positivo ou negativo
+        while True:
+            try:
+                valor_do_produto = float(input('Digite o preço do seu produto:   ')) #while para rodar o programa em loop caso o usuario coloque letras ao inver de numeros no preço
+                break
+            except ValueError:
+                print('digite apenas números')
+        
+        if valor_do_produto <= 0:    #Validando se o valor e positivo ou negativo
             print('valor inválido')
         else:
             print('\ncategorias_disponiveis:')
             for i, cat in enumerate(categorias_disponiveis, 1): #cat == categoria
                 print(f' [{i}] {cat}')
-            
+    
             escolha_a_categoria = input(f'Escolha a categoria (numero): ')
 
             if escolha_a_categoria.isdigit() and 1 <= int(escolha_a_categoria) <= len(categorias_disponiveis): #evitando erro de abc
