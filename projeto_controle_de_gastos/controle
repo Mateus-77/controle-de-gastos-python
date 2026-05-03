@@ -83,7 +83,7 @@ while True:
 
     elif servico == '6':
         if not gastos:
-            print('Nenhum gasto cadastrado.') 
+            print('Nenhum gasto cadastrado.')
 
         else:
             print('=' * 30)
