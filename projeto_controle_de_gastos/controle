@@ -1,15 +1,15 @@
 gastos = []
 categorias_disponiveis = ['Alimentação', 'Transporte', 'Saúde', 'Lazer', 'Educação', 'Outros']
-while True:
+executando = True  #variavel de controle para sair do programa e do loop 
+while executando:
     print('=' * 40)
     print('          Relatório de gastos        ')
     print('=' * 40)
     print('[1] Adicionar gastos')                     #TABELA VISUAL PARA O USUARIO EM LOOP
-    print('[2] Listar os gastos')
-    print('[3] Mostrar total gasto')
-    print('[4] Listar por categoria')
-    print('[5] Sair')
-    print('[6] Excluir gasto')
+    print('[2] Relatorio Geral')
+    print('[3] Listar por categoria')
+    print('[4] Sair')
+    print('[5] Excluir gasto')
     servico = input('Escolha o serviço que voce quer: ')
 
     if servico == '1':
@@ -50,38 +50,65 @@ while True:
         print('=' * 30)
 
         if not gastos:
-            print('Nenhum gasto cadastrado.') #adiciona uma saida caso nao tenha nenhum valor na lista
+            print('Nenhum gasto cadastrado.')
+
         else:
-            for i, (produto, valor, categoria) in enumerate(gastos,1): #ENUMERANDO OS GASTOS PARA A FUNÇÄO DE EXCLUIR
-             print(f'{i}. {produto} [{categoria}] - R$ {valor:.2f}') #DEIXA AS LINHAS UMA EMBAIXO DA OUTRA E ADICIONA $
-            print(f'Total de gastos cadastrados {len(gastos)}')
+            for i, (produto, valor, categoria) in enumerate(gastos, 1):
+                print(f'{i}. {produto} [{categoria}] - R$ {valor:.2f}')
+
+            print(f'Total de gastos cadastrados: {len(gastos)}') #total de gastos
+
+            total = 0
+            for item in gastos:
+                total += item[1]
+
+            media = total / len(gastos) #mostra as medias do gasto
+
+            maior = gastos[0]  #funçao para mostrar o maior gasto
+            for item in gastos:
+                if item[1] > maior[1]:
+                    maior = item
+
+            print(f'Total gasto: R$ {total:.2f}')
+            print(f'Média dos gastos: R$ {media:.2f}')
+            print(f'Maior gasto: {maior[0]} - R$ {maior[1]:.2f}')
 
     elif servico == '3':
-        total = 0
-        for item in gastos:
-            total += item[1]
-        print(f'Total gasto: R$ {total:.2f}')
-     
-    elif servico == '4':
-        for categoria in categorias_disponiveis:
-            gastos_da_categoria = []             #criando a lista nova gastos_da_categoria
-            for produto, valor, cat in gastos:
-                if cat == categoria:
-                    gastos_da_categoria.append((produto, valor))
+        if not gastos:
+            print('Nenhum gasto cadastrado.') #saida para nenhum gasto encontrado
+        else:
+            for categoria in categorias_disponiveis:
+                gastos_da_categoria = []             #criando a lista nova gastos_da_categoria
+                for produto, valor, cat in gastos:
+                    if cat == categoria:
+                        gastos_da_categoria.append((produto, valor))
         
-        # fora do for acima so executa depois de ver todos os gastos
-            if gastos_da_categoria:
-                total_categoria = sum(valor for _, valor in gastos_da_categoria)
-                print(f'\n{categoria} — Total: R$ {total_categoria:.2f}')
-                print('-' * 35)
-                for nome, valor in gastos_da_categoria:
-                    print(f'  {nome:<22} R$ {valor:.2f}')
+                                                 # fora do for acima so executa depois de ver todos os gastos
+                if gastos_da_categoria:
+                    total_categoria = sum(valor for _, valor in gastos_da_categoria)
+                    print(f'\n{categoria} — Total: R$ {total_categoria:.2f}')
+                    print('-' * 35)
+                    for nome, valor in gastos_da_categoria:
+                        print(f'  {nome:<22} R$ {valor:.2f}')
+
+    elif servico == '4':
+        
+        while True:
+
+            sair=input('Deseja sair? S/N').strip().upper()
+
+            if sair == 'S':
+                print('Encerrando o sistema')
+                executando = False
+                break
+
+            elif sair =='N':
+                print('Voltando ao menu')
+                break
+            else:
+                print('Valor nao encontrado. Digite S ou N')
 
     elif servico == '5':
-        print('encerrando o sistema')
-        break
-
-    elif servico == '6':
         if not gastos:
             print('Nenhum gasto cadastrado.')
 
