@@ -9,6 +9,7 @@ while True:
     print('[3] Mostrar total gasto')
     print('[4] Listar por categoria')
     print('[5] Sair')
+    print('[6] Excluir gasto')
     servico = input('Escolha o serviço que voce quer: ')
 
     if servico == '1':
@@ -51,14 +52,14 @@ while True:
         if not gastos:
             print('Nenhum gasto cadastrado.') #adiciona uma saida caso nao tenha nenhum valor na lista
         else:
-            for produto, valor, categoria in gastos:
-             print(f'{produto} [{categoria}] - R$ {valor:.2f}') #DEIXA AS LINHAS UMA EMBAIXO DA OUTRA E ADICIONA $
+            for i, (produto, valor, categoria) in enumerate(gastos,1): #ENUMERANDO OS GASTOS PARA A FUNÇÄO DE EXCLUIR
+             print(f'{i}. {produto} [{categoria}] - R$ {valor:.2f}') #DEIXA AS LINHAS UMA EMBAIXO DA OUTRA E ADICIONA $
             print(f'Total de gastos cadastrados {len(gastos)}')
 
     elif servico == '3':
         total = 0
-        for produto in gastos:
-            total += produto[1]
+        for item in gastos:
+            total += item[1]
         print(f'Total gasto: R$ {total:.2f}')
      
     elif servico == '4':
@@ -79,6 +80,32 @@ while True:
     elif servico == '5':
         print('encerrando o sistema')
         break
-    
+
+    elif servico == '6':
+        if not gastos:
+            print('Nenhum gasto cadastrado.') 
+
+        else:
+            print('=' * 30)
+            print('EXCLUIR GASTO')
+            print('=' * 30)
+
+            for i, (produto, valor, categoria) in enumerate(gastos,1): 
+             print(f'{i}. {produto} [{categoria}] - R$ {valor:.2f}')
+
+            escolha = input('Escolha o que deseja excluir:')
+
+            if escolha.isdigit():
+                indice = int(escolha) -1
+
+                if 0 <= indice < len(gastos):
+                    removido = gastos[indice]
+                    del gastos[indice]
+                    print(f'Gasto "{removido[0]}" foi removido com sucesso.')
+                else:
+                    print('Número inválido.')
+            else:
+                print('Digite apenas números.')
+
     else:
         print('Serviço näo encontrado, digite um numero compativel com os nossos serviços: ')
