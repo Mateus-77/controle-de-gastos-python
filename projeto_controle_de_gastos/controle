@@ -5,44 +5,47 @@ while executando:
     print('=' * 40)
     print('          Relatório de gastos        ')
     print('=' * 40)
-    print('[1] Adicionar gastos')                     #TABELA VISUAL PARA O USUARIO EM LOOP
-    print('[2] Relatorio Geral')
+    print('[1] Adicionar gastos')
+    print('[2] Relatório Geral')
     print('[3] Listar por categoria')
     print('[4] Sair')
-    print('[5] Excluir gasto')
+    print('[5] Excluir gastos')
     servico = input('Escolha o serviço que voce quer: ')
 
     if servico == '1':
-        produto = (input('Digite o nome do produto:   ')).strip() #remover espaços vazios, nao permitindo o usuario salvar sem nome
-        while not produto:     #pequena repetiçao para nao permitir espaços vazios
-            print('Nome näo pode ser em branco')
+        produto = (input('Digite o nome do produto:   ')).strip()
+        while not produto:
+            print('Nome não pode ser em branco')
             produto = input('Digite o nome do produto: ').strip()
 
         while True:
             try:
-                valor_do_produto = float(input('Digite o preço do seu produto:   ')) #while para rodar o programa em loop caso o usuario coloque letras ao inver de numeros no preço
+                valor_do_produto = float(input('Digite o preço do seu produto:   '))
                 break
             except ValueError:
-                print('digite apenas números')
+                print('Digite apenas números')
         
-        if valor_do_produto <= 0:    #Validando se o valor e positivo ou negativo
-            print('valor inválido')
+        if valor_do_produto <= 0:
+            print('Valor inválido')
         else:
-            print('\ncategorias_disponiveis:')
-            for i, cat in enumerate(categorias_disponiveis, 1): #cat == categoria
+            print('\nCategorias disponíveis:')
+            for i, cat in enumerate(categorias_disponiveis, 1):
                 print(f' [{i}] {cat}')
     
-            escolha_a_categoria = input(f'Escolha a categoria (numero): ')
+            escolha_a_categoria = input('Escolha a categoria (numero): ')
 
-            if escolha_a_categoria.isdigit() and 1 <= int(escolha_a_categoria) <= len(categorias_disponiveis): #evitando erro de abc
+            if escolha_a_categoria.isdigit() and 1 <= int(escolha_a_categoria) <= len(categorias_disponiveis):
                 categoria = categorias_disponiveis[int(escolha_a_categoria) - 1]
-
             else:  
                 categoria = 'Outros'
-                print('Categoria invalida, defina como outros. ')
+                print('Categoria inválida, definida como "Outros".')
 
-            gastos.append((produto, valor_do_produto,categoria))
-            print('Gastos adicionados')
+            gastos.append({          # dicionário substituindo a tupla
+                'produto': produto,
+                'valor': valor_do_produto,
+                'categoria': categoria
+            })
+            print('Gasto adicionado!')
 
     elif servico == "2":
         print('=' * 30)
@@ -51,88 +54,70 @@ while executando:
 
         if not gastos:
             print('Nenhum gasto cadastrado.')
-
         else:
-            for i, (produto, valor, categoria) in enumerate(gastos, 1):
-                print(f'{i}. {produto} [{categoria}] - R$ {valor:.2f}')
+            for i, gasto in enumerate(gastos, 1):
+                print(f'{i}. {gasto["produto"]} [{gasto["categoria"]}] - R$ {gasto["valor"]:.2f}')
 
-            print(f'Total de gastos cadastrados: {len(gastos)}') #total de gastos
+            print(f'\nTotal de gastos cadastrados: {len(gastos)}')
 
-            total = 0
-            for item in gastos:
-                total += item[1]
-
-            media = total / len(gastos) #mostra as medias do gasto
-
-            maior = gastos[0]  #funçao para mostrar o maior gasto
-            for item in gastos:
-                if item[1] > maior[1]:
-                    maior = item
+            total = sum(gasto['valor'] for gasto in gastos)  # mais limpo com dicionário
+            media = total / len(gastos)
+            maior = max(gastos, key=lambda g: g['valor'])    # max() com dicionário
 
             print(f'Total gasto: R$ {total:.2f}')
             print(f'Média dos gastos: R$ {media:.2f}')
-            print(f'Maior gasto: {maior[0]} - R$ {maior[1]:.2f}')
+            print(f'Maior gasto: {maior["produto"]} - R$ {maior["valor"]:.2f}')
 
     elif servico == '3':
         if not gastos:
-            print('Nenhum gasto cadastrado.') #saida para nenhum gasto encontrado
+            print('Nenhum gasto cadastrado.')
         else:
             for categoria in categorias_disponiveis:
-                gastos_da_categoria = []             #criando a lista nova gastos_da_categoria
-                for produto, valor, cat in gastos:
-                    if cat == categoria:
-                        gastos_da_categoria.append((produto, valor))
-        
-                                                 # fora do for acima so executa depois de ver todos os gastos
+                gastos_da_categoria = [g for g in gastos if g['categoria'] == categoria]  # filtragem com dicionário
+
                 if gastos_da_categoria:
-                    total_categoria = sum(valor for _, valor in gastos_da_categoria)
+                    total_categoria = sum(g['valor'] for g in gastos_da_categoria)
                     print(f'\n{categoria} — Total: R$ {total_categoria:.2f}')
                     print('-' * 35)
-                    for nome, valor in gastos_da_categoria:
-                        print(f'  {nome:<22} R$ {valor:.2f}')
+                    for g in gastos_da_categoria:
+                        print(f'  {g["produto"]:<22} R$ {g["valor"]:.2f}')
 
     elif servico == '4':
-        
-        while True:
-
-            sair=input('Deseja sair? S/N').strip().upper()
-
+        while executando:
+            sair = input('Deseja sair? S/N: ').strip().upper()
             if sair == 'S':
                 print('Encerrando o sistema')
                 executando = False
                 break
-
-            elif sair =='N':
+            elif sair == 'N':
                 print('Voltando ao menu')
                 break
             else:
-                print('Valor nao encontrado. Digite S ou N')
+                print('Valor não encontrado. Digite S ou N')
 
     elif servico == '5':
         if not gastos:
             print('Nenhum gasto cadastrado.')
-
         else:
             print('=' * 30)
             print('EXCLUIR GASTO')
             print('=' * 30)
 
-            for i, (produto, valor, categoria) in enumerate(gastos,1): 
-             print(f'{i}. {produto} [{categoria}] - R$ {valor:.2f}')
+            for i, gasto in enumerate(gastos, 1):
+                print(f'{i}. {gasto["produto"]} [{gasto["categoria"]}] - R$ {gasto["valor"]:.2f}')
 
-            escolha = input('Escolha o que deseja excluir:')
+            escolha = input('Escolha o que deseja excluir: ')
 
             if escolha.isdigit():
-                indice = int(escolha) -1
-
+                indice = int(escolha) - 1
                 if 0 <= indice < len(gastos):
                     removido = gastos[indice]
                     del gastos[indice]
-                    print(f'Gasto "{removido[0]}" foi removido com sucesso.')
+                    print(f'Gasto "{removido["produto"]}" removido com sucesso.')
                 else:
                     print('Número inválido.')
             else:
                 print('Digite apenas números.')
 
     else:
-        print('Serviço näo encontrado, digite um numero compativel com os nossos serviços: ')
+        print('Serviço não encontrado, digite um número compatível com os nossos serviços.')
