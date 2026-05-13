@@ -132,7 +132,6 @@ def sair_do_sistema():
         else:
             print('Valor não encontrado. Digite S ou N')
 
-
 # ================= PROGRAMA PRINCIPAL =================
 
 executando = True
