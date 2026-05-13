@@ -1,22 +1,18 @@
 gastos = []
 categorias_disponiveis = ['Alimentação', 'Transporte', 'Saúde', 'Lazer', 'Educação', 'Outros']
 
+
 # ================= FUNÇÕES =================
 
-def separador(titulo, tamanho=30):
-    print('=' * tamanho)
-    print(titulo.center(tamanho))
-    print('=' * tamanho)
-
-
 def mostrar_menu():
-    separador('Relatório de gastos', 40)
+    print('=' * 40)
+    print('          Relatório de gastos        ')
+    print('=' * 40)
     print('[1] Adicionar gastos')
     print('[2] Relatório Geral')
     print('[3] Listar por categoria')
     print('[4] Sair')
     print('[5] Excluir gastos')
-    return input('Escolha o serviço que voce quer: ')
 
 
 def adicionar_gasto():
@@ -58,7 +54,9 @@ def adicionar_gasto():
 
 
 def relatorio_geral():
-    separador('LISTA DE GASTOS')
+    print('=' * 30)
+    print('LISTA DE GASTOS')
+    print('=' * 30)
 
     if not gastos:
         print('Nenhum gasto cadastrado.')
@@ -88,6 +86,7 @@ def listar_por_categoria():
 
             if gastos_da_categoria:
                 total_categoria = sum(g['valor'] for g in gastos_da_categoria)
+
                 print(f'\n{categoria} — Total: R$ {total_categoria:.2f}')
                 print('-' * 35)
 
@@ -96,11 +95,13 @@ def listar_por_categoria():
 
 
 def excluir_gasto():
-    separador('EXCLUIR GASTO')
-
     if not gastos:
         print('Nenhum gasto cadastrado.')
     else:
+        print('=' * 30)
+        print('EXCLUIR GASTO')
+        print('=' * 30)
+
         for i, gasto in enumerate(gastos, 1):
             print(f'{i}. {gasto["produto"]} [{gasto["categoria"]}] - R$ {gasto["valor"]:.2f}')
 
@@ -112,6 +113,7 @@ def excluir_gasto():
             if 0 <= indice < len(gastos):
                 removido = gastos[indice]
                 del gastos[indice]
+
                 print(f'Gasto "{removido["produto"]}" removido com sucesso.')
             else:
                 print('Número inválido.')
@@ -126,9 +128,11 @@ def sair_do_sistema():
         if sair == 'S':
             print('Encerrando o sistema')
             return False
+
         elif sair == 'N':
             print('Voltando ao menu')
             return True
+
         else:
             print('Valor não encontrado. Digite S ou N')
 
@@ -138,17 +142,24 @@ def sair_do_sistema():
 executando = True
 
 while executando:
-    servico = mostrar_menu()
+    mostrar_menu()
+
+    servico = input('Escolha o serviço que voce quer: ')
 
     if servico == '1':
         adicionar_gasto()
+
     elif servico == '2':
         relatorio_geral()
+
     elif servico == '3':
         listar_por_categoria()
+
     elif servico == '4':
         executando = sair_do_sistema()
+
     elif servico == '5':
         excluir_gasto()
+
     else:
         print('Serviço não encontrado.')
